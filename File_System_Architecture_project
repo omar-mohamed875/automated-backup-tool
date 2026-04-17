@@ -1,0 +1,61 @@
+# Secure Corporate File System Architecture 🛡️📁
+
+## 📝 Objective
+This project demonstrates the design and implementation of a secure file system architecture for a fictional company ("CyberTech") using Linux command-line tools. The goal is to enforce strict access controls between different departments while providing a secure shared space using Special Permissions.
+
+## 🏢 Scenario
+- **HR Department:** Requires a private directory (`hr_data`) accessible only to HR staff.
+- **IT Department:** Requires a private directory (`it_data`) accessible only to IT staff.
+- **Public Share:** A common directory (`public_share`) where all employees can share files, but no one can delete files owned by others.
+
+## 🛠️ Tools & Technologies Used
+- Linux (Debian/Kali)
+- User & Group Management (`useradd`, `usermod`, `groupadd`)
+- Directory Permissions (`chmod`, `chown`, `chgrp`)
+- Special Permissions (**SGID**, **Sticky Bit**)
+
+## 🚀 Step-by-Step Implementation
+
+### 1. Creating Users & Groups
+Created dedicated groups for each department and assigned users to them:
+```bash
+sudo groupadd hr_dept
+sudo groupadd it_dept
+
+sudo adduser hr_user1
+sudo usermod -aG hr_dept hr_user1
+
+sudo adduser it_user1
+sudo adduser it_admin
+sudo usermod -aG it_dept it_user1
+sudo usermod -aG it_dept it_admin
+2. Building the Directory Structure
+Created the main corporate directory and departmental subdirectories:
+
+Bash
+sudo su - root
+mkdir /cypertech
+cd /cypertech
+mkdir hr_data it_data public_share
+3. Assigning Ownership and Basic Permissions
+Assigned group ownership to the respective directories and restricted access to group members only (770):
+
+Bash
+chgrp hr_dept hr_data
+chmod 770 hr_data
+
+chgrp it_dept it_data
+chmod 770 it_data
+4. Applying Special Permissions (SGID & Sticky Bit)
+SGID (g+s): Applied to HR and IT directories so that any new files created within them automatically inherit the department's group ownership.
+
+Sticky Bit (+t): Applied to the public share directory to prevent users from deleting or renaming files they do not own.
+
+Bash
+chmod g+s hr_data
+chmod g+s it_data
+
+chmod 1777 public_share
+chmod +t public_share
+🎯 Conclusion
+Successfully configured a secure Linux directory environment utilizing basic and advanced permission structures to meet corporate security compliance.
